@@ -1,0 +1,9 @@
+let express = require('express')
+
+/**------------app setup---------------- **/
+let app = express();
+
+/** ------------server setup--------- **/
+let server = app.listen(4000, () => {
+    console.log("Project is running on localhost:4000");
+});
