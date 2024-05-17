@@ -89,7 +89,41 @@
 		<script type="module">
 			import { io } from "https://cdn.socket.io/4.7.5/socket.io.esm.min.js";
 
-			const socket = io("http://localhost:4000/");
+            const socket = io("http://localhost:4000/");
+
+            let name = document.getElementById('name');
+            let message = document.getElementById('message');
+            let send = document.getElementById('send');
+            let output = document.getElementById('output');
+            let feedback = document.getElementById('feedback');
+
+            send.addEventListener('click', () => {
+                let data = {
+                    name: name.value,
+                    message: message.value,
+                }
+
+                socket.emit('chat', data);
+            });
+
+            message.addEventListener('keypress', () => {
+                socket.emit('typing', name.value);
+            });
+
+            // LISTEN EVENT
+            socket.on('chat', (data) => {
+                output.innerHTML += `<p><strong>${data.name}</strong> : ${data.message}</p>`;
+                name.value = "";
+                message.value = "";
+                feedback.innerHTML = "";
+            });
+
+            socket.on('typing', (name) => {
+                feedback.innerHTML = `<p><em>${name}</em> is typing...</p>`;
+                setTimeout(() => {
+                    feedback.innerHTML = "";
+                }, 3000);
+            });
 		</script>
 	</body>
 </html>
